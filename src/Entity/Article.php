@@ -4,26 +4,40 @@ namespace App\Entity;
 
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
+    public function __construct()
+    {
+        $this->published_at = new \DateTimeImmutable();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $published_at = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: "Le titre est requis")]
+    #[Assert\Length(min: 3, minMessage: "Le titre doit etre au minimum {{limit}} caractères", max: 10, maxMessage: "Le titre ne doit pas dépasser {{limit}} caractères")]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le contenu est requis")]
+    #[Assert\Length(min: 3, minMessage: "Le contenu doit etre au minimum {{limit}} caractères", max: 255, maxMessage: "Le contenu ne doit pas dépasser {{limit}} caractères")]
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Choice(
+        choices: [1, 2],
+        message: 'Vous devez selectionner au moins une catégorie',
+    )]
     private ?Category $category = null;
 
     public function getId(): ?int
