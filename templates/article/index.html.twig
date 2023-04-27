@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Article index{% endblock %}
+
+{% block body %}
+    <div class="container max-w-7xl mx-auto flex justify-between items-center mb-4">
+        <h1 class="text-2xl text-red-400 uppercase">Gérer les actualités</h1>
+        <a class="" href="{{ path('app_article_new') }}"><svg xmlns="http://www.w3.org/2000/svg" width="3rem" height="3rem" viewBox="0 0 24 24"><path fill="#16a34a" d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4v4Zm1 5q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg></a>
+    </div>
+    <div class="container  max-w-7xl w-100 mx-auto">
+    <div class="flex flex-col">
+        <div class="w-full">
+            <div class="border-b border-gray-200 shadow">
+                <table class="divide-y divide-gray-300 w-100">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-2 text-xs text-gray-500">
+                                #
+                            </th>
+                            <th class="px-6 py-2 text-xs text-gray-500">
+                                Title
+                            </th>
+                            <th class="px-6 py-2 text-xs text-gray-500">
+                                Content
+                            </th>
+                            <th class="px-6 py-2 text-xs text-gray-500">
+                                Published_At
+                            </th>
+                            <th class="px-6 py-2 text-xs text-gray-500">
+                                Gategory
+                            </th>
+                            <th class="px-6 py-2 text-xs text-gray-500">
+                                Edit
+                            </th>
+                            <th class="px-6 py-2 text-xs text-gray-500">
+                                Delete
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-300">
+                        {% for article in articles %}
+                        <tr class="whitespace-nowrap">
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ article.id }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-900">
+                                    {{ article.title }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-500 ">
+                                {% if article.content|length > 92 %}
+                                    {{ article.content|slice(0, 92) ~ '...' }}
+                                {% else %}
+                                    {{ article.content }}
+                                {% endif %}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ article.publishedAt ? article.publishedAt|date('Y-m-d H:i:s') : '' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">
+                                {{ article.category ? article.category.name : 'none' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                </a>
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    {# <h1>Article index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Published_at</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in articles %}
+            <tr>
+                <td>{{ article.id }}</td>
+                <td>{{ article.publishedAt ? article.publishedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ article.title }}</td>
+                <td>{{ article.content }}</td>
+                <td>
+                    <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
+                    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_article_new') }}">Create new</a> #}
+{% endblock %}
